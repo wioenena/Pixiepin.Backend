@@ -8,5 +8,6 @@
   },
   "[json][jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "git.confirmSync": false
 }
