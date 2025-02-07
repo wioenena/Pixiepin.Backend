@@ -1,12 +1,27 @@
-var builder = WebApplication.CreateBuilder(args);
+using Pixiepin.Backend.API.Configurations;
+using Scalar.AspNetCore;
 
-builder.Services.AddOpenApi();
+var builder = WebApplication.CreateBuilder(args);
+var environment = builder.Environment.EnvironmentName;
+var isDevelopment = builder.Environment.IsDevelopment();
+
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false)
+    .AddJsonFile($"appsettings.{environment}.json", optional: true);
+
+builder.Services
+    .AddOpenApi()
+    .ApplyCorsConfiguration()
+    .ApplySerilogConfiguration()
+    .AddControllers();
+
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
+if (isDevelopment) {
+    _ = app.MapOpenApi();
+    _ = app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
