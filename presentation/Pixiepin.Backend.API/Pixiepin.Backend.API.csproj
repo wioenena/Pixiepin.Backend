@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\infrastructure\Pixiepin.Backend.Persistence\Pixiepin.Backend.Persistence.csproj" />
+    <ProjectReference Include="..\..\shared\Pixiepin.Backend.Shared\Pixiepin.Backend.Shared.csproj" />
   </ItemGroup>
 
 </Project>
