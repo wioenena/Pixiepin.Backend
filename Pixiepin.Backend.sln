@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Pixiepin.Backend.sln = Pixiepin.Backend.sln
 		LICENSE.txt = LICENSE.txt
 		README.md = README.md
+		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{9D114D20-CD28-49EC-A760-ED16400A16DE}"
