@@ -1,5 +1,7 @@
 using Pixiepin.Backend.API.Configurations;
+using Pixiepin.Backend.Application;
 using Pixiepin.Backend.Persistence;
+using Pixiepin.Backend.Shared.Result;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,7 @@ builder.Configuration
 
 builder.Services
     .AddOpenApi()
+    .AddApplicationServices()
     .AddPersistenceServices()
     .ApplyCorsConfiguration()
     .ApplySerilogConfiguration()
@@ -29,5 +32,6 @@ if (isDevelopment) {
 
 app.UseHttpsRedirection();
 app.MapControllers();
+
 
 app.Run();
