@@ -16,5 +16,5 @@ public sealed class Result<TValue, TError> {
 public static class Result {
     public static Result<TValue, TError> Ok<TValue, TError>(TValue value) => new(value);
 
-    public static Result<TValue, TError> Fail<TValue, TError>(TError error) => new(error);
+    public static Result<TValue, TError> Err<TValue, TError>(TError error) => new(error);
 }
