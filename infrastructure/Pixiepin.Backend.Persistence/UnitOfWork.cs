@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using Pixiepin.Backend.Application.Exceptions;
 using Pixiepin.Backend.Application.Interfaces;
 using Pixiepin.Backend.Application.Interfaces.Repositories;
 using Pixiepin.Backend.Domain.Entities.Common;
@@ -18,8 +21,12 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork {
             var result = await this.context.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
             return result;
+        } catch (DbUpdateException dbUpdateException) when (dbUpdateException.InnerException is PostgresException postgresException) {
+            if (postgresException.SqlState == "23505")
+                throw new EntityAlreadyExistException(dbUpdateException.InnerException!.Message);
+
+            throw;
         } catch {
-            await transaction.RollbackAsync(cancellationToken);
             throw;
         }
     }
