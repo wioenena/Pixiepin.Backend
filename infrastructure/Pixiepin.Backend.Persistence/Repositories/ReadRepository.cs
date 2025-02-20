@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Pixiepin.Backend.Application.Interfaces.Repositories;
 using Pixiepin.Backend.Domain.Entities.Common;
@@ -6,6 +7,7 @@ using Pixiepin.Backend.Persistence.Contexts;
 namespace Pixiepin.Backend.Persistence.Repositories;
 
 public class ReadRepository<TEntity>(ApplicationDbContext context) : Repository<TEntity>(context), IReadRepository<TEntity> where TEntity : BaseEntity {
+    public async Task<TEntity?> FindByExpression(Expression<Func<TEntity, bool>> expression) => await this.Table.FirstOrDefaultAsync(expression);
     public async Task<IEnumerable<TEntity>> GetAllAsync()
         => await this.Table.ToListAsync();
     public async Task<TEntity?> GetByIdAsync(Guid id)
