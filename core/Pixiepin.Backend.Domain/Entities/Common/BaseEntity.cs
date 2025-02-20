@@ -4,9 +4,9 @@ namespace Pixiepin.Backend.Domain.Entities.Common;
 
 public abstract class BaseEntity {
     [Column("id")]
-    public required Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.CreateVersion7();
     [Column("createdAt")]
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     [Column("updatedAt")]
     public DateTime? UpdatedAt { get; set; }
     [Column("isDeleted")]
