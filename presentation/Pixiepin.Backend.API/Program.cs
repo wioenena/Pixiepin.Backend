@@ -1,7 +1,9 @@
+using System.Net;
+using System.Threading.RateLimiting;
 using Pixiepin.Backend.API.Configurations;
+using Pixiepin.Backend.API.Middlewares;
 using Pixiepin.Backend.Application;
 using Pixiepin.Backend.Persistence;
-using Pixiepin.Backend.Shared.Result;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,14 +15,28 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false)
     .AddJsonFile($"appsettings.{environment}.json", optional: true);
 
-builder.Services
-    .AddOpenApi()
-    .AddApplicationServices()
-    .AddPersistenceServices()
-    .ApplyCorsConfiguration()
-    .ApplySerilogConfiguration()
-    .AddLogging()
-    .AddControllers();
+builder.Services.AddOpenApi();
+builder.Services.AddApplicationServices();
+builder.Services.AddPersistenceServices(builder.Configuration);
+builder.Services.ApplyCorsConfiguration();
+builder.Services.ApplySerilogConfiguration();
+builder.Services.ApplyJWTConfiguration(isDevelopment);
+builder.Services.AddLogging();
+builder.Services.AddControllers();
+builder.Services.AddRateLimiter(static options => {
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    _ = options.AddPolicy("default", static httpContext => {
+        var remoteIpAddress = httpContext.Connection.RemoteIpAddress;
+        return remoteIpAddress is null ?
+            RateLimitPartition.GetNoLimiter(IPAddress.Loopback.ToString())
+            :
+            RateLimitPartition.GetFixedWindowLimiter(remoteIpAddress.ToString(), _ => new FixedWindowRateLimiterOptions {
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1)
+            });
+    });
+});
+builder.Services.AddTransient<ExceptionMiddleware>();
 
 
 var app = builder.Build();
@@ -32,6 +48,10 @@ if (isDevelopment) {
 
 app.UseHttpsRedirection();
 app.MapControllers();
+app.UseRateLimiter();
+app.UseMiddleware<ExceptionMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 
 
 app.Run();
