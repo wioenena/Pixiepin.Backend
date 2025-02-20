@@ -10,4 +10,6 @@ public sealed class AccountEntity : BaseEntity {
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     public required string CompanyName { get; set; }
+    public string? AccessToken { get; set; }
+    public string? RefreshToken { get; set; }
 }
