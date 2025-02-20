@@ -1,5 +1,4 @@
 using Pixiepin.Backend.Application.Interfaces.Repositories;
-using Pixiepin.Backend.Domain.Entities.Account;
 using Pixiepin.Backend.Domain.Entities.Common;
 
 namespace Pixiepin.Backend.Application.Interfaces;
