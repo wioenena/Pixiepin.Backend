@@ -40,5 +40,11 @@ public sealed class AccountConfiguration : IEntityTypeConfiguration<AccountEntit
                 .IsRequired(true)
                 .HasColumnName("companyName")
                 .HasColumnType("varchar(100)");
+        _ = builder.Property(a => a.AccessToken)
+                .IsRequired(false)
+                .HasColumnName("accessToken");
+        _ = builder.Property(a => a.RefreshToken)
+                .IsRequired(false)
+                .HasColumnName("refreshToken");
     }
 }
